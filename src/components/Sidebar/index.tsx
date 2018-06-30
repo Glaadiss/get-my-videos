@@ -1,25 +1,57 @@
+// @flow
 import * as React from "react";
 
-import Avatar from "@material-ui/core/Avatar";
+import Drawer from "@material-ui/core/Drawer";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
-import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
+import { connect } from "react-redux";
+import { withStyles } from "@material-ui/core/styles";
+import { WithStyles, createStyles } from "@material-ui/core";
+import InboxIcon from "@material-ui/icons/Inbox";
+import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
 
-class CheckboxListSecondary extends React.Component {
-  public render() {
-    return (
-      <List>
-        {[0, 1, 2, 3].map(value => (
-          <ListItem key={value} dense={true} button={true}>
-            <Avatar alt="Remy Sharp" src="/static/images/remy.jpg" />
-            <ListItemText primary={`Line item ${value + 1}`} />
-            <ListItemSecondaryAction />
-          </ListItem>
-        ))}
-      </List>
-    );
-  }
-}
+const styles = () =>
+  createStyles({
+    drawerPaper: {
+      top: "64px"
+    }
+  });
 
-export default CheckboxListSecondary;
+type Props = { open: boolean } & WithStyles;
+
+const LayoutMenu = (props: Props) => {
+  const { open, classes } = props;
+  return (
+    <Drawer
+      classes={{ paper: classes.drawerPaper }}
+      open={open}
+      anchor="left"
+      variant="permanent"
+    >
+      <List>
+        <ListItem button={true}>
+          <ListItemIcon>
+            <InboxIcon />
+          </ListItemIcon>
+          <ListItemText primary="Inbox" />
+        </ListItem>
+      </List>
+    </Drawer>
+  );
+};
+
+type ReduxState = {
+  menu: {
+    open: boolean;
+  };
+};
+
+const mapStateToProps = ({ menu }: ReduxState) => {
+  return {
+    open: menu.open
+  };
+};
+
+const StyledLayoutMenu = withStyles(styles)(LayoutMenu);
+export default connect(mapStateToProps)(StyledLayoutMenu);
