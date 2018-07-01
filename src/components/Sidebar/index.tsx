@@ -14,7 +14,8 @@ import ListItemText from "@material-ui/core/ListItemText";
 const styles = () =>
   createStyles({
     drawerPaper: {
-      top: "64px"
+      top: "64px",
+      width: "255px"
     }
   });
 

@@ -4,6 +4,7 @@ import Navbar from "./Navbar";
 import { Provider } from "react-redux";
 import Sidebar from "./Sidebar";
 import { store } from "../services/store";
+import Content from "./Content";
 
 class App extends React.Component {
   public render() {
@@ -12,7 +13,7 @@ class App extends React.Component {
         <div>
           <Navbar />
           <Sidebar />
-          Text
+          <Content />
         </div>
       </Provider>
     );
