@@ -64,7 +64,6 @@ function renderSuggestion(
 
 function renderInput(inputProps: any) {
   const { classes, ref, ...other } = inputProps;
-  console.warn(inputProps);
   return (
     <TextField
       fullWidth
