@@ -2,7 +2,8 @@ import {
   Actions,
   GET_SUGGESTIONS_ERROR,
   GET_SUGGESTIONS_FETCHED,
-  GET_SUGGESTIONS_REQUEST
+  GET_SUGGESTIONS_REQUEST,
+  CHANGE_SUGGESTION_VALUE
 } from "../actions/suggestions";
 import { Suggestion } from "../gapi/responseTypings";
 
@@ -27,6 +28,7 @@ export default function suggestions(
   switch (action.type) {
     case GET_SUGGESTIONS_REQUEST:
       return { ...state, isLoading: true, isError: false };
+
     case GET_SUGGESTIONS_FETCHED:
       return {
         ...state,
@@ -34,8 +36,12 @@ export default function suggestions(
         isError: false,
         suggestions: action.payload
       };
+
     case GET_SUGGESTIONS_ERROR:
       return { ...state, isLoading: false, isError: true };
+
+    case CHANGE_SUGGESTION_VALUE:
+      return { ...state, currentValue: action.payload };
 
     default:
       return state;

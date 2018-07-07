@@ -15,6 +15,7 @@ export const GET_SUGGESTIONS_REQUEST =
 export const GET_SUGGESTIONS_FETCHED =
   "[suggestionsFetched] get suggestions fetched";
 export const GET_SUGGESTIONS_ERROR = "[suggestionsError] get suggestions error";
+export const CHANGE_SUGGESTION_VALUE = "[suggestion] change value";
 
 export const Actions = {
   getSuggestions: (payload: VideoQuery) =>
@@ -23,7 +24,10 @@ export const Actions = {
   getSuggestionsFetched: (payload: Suggestion[]) =>
     createAction(GET_SUGGESTIONS_FETCHED, payload),
 
-  getSuggestionsError: () => createAction(GET_SUGGESTIONS_ERROR, { reason })
+  getSuggestionsError: () => createAction(GET_SUGGESTIONS_ERROR, { reason }),
+
+  changeSuggestionValue: (payload: string) =>
+    createAction(CHANGE_SUGGESTION_VALUE, payload)
 };
 
 export type Actions = ActionsUnion<typeof Actions>;
