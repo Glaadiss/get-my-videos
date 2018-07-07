@@ -1,13 +1,22 @@
+import { RootObject } from "./responseTypings";
+import { VideoQuery } from "../actions/videos";
 const API_KEY = "AIzaSyCHD4aCb2iHf-8vcx9lbN71RisTtBYxit0";
 const CLIENT_ID =
   "650362998502-hgepbavbsu927vv11gnm0pt7ohfjpr1g.apps.googleusercontent.com";
 
-import { RootObject } from "./responseTypings";
-import { VideoQuery } from "../actions/videos";
-
-function loadYoutubeApi() {
+function loadYoutubeApi(i = 0) {
   return new Promise((resolve, reject) => {
     const { gapi } = window as any;
+    if (i === 5) {
+      reject("Can't fetch google library!");
+    }
+    if (gapi === undefined || gapi.client === undefined) {
+      return resolve(
+        setTimeout(() => {
+          loadYoutubeApi(i + 1);
+        }, 200)
+      );
+    }
 
     gapi.client
       .init({
