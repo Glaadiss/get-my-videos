@@ -33,7 +33,7 @@ function loadYoutubeApi(i = 0) {
   });
 }
 
-function getVideos({ q, maxResults = 10 }: VideoQuery) {
+function getVideos({ q, maxResults = 15 }: VideoQuery) {
   const { gapi } = window as any;
   return new Promise((resolve, reject) => {
     const request = gapi.client.youtube.search.list({
@@ -42,7 +42,8 @@ function getVideos({ q, maxResults = 10 }: VideoQuery) {
       maxResults
     });
     request.execute((response: RootObject) => {
-      resolve(response);
+      const items = response.items.filter(item => item.id && item.id.videoId);
+      resolve({ ...response, items });
     });
   });
 }
