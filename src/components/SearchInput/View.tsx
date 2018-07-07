@@ -33,15 +33,15 @@ function renderSuggestionsContainer(options: any) {
 }
 
 function getSuggestionValue(suggestion: Suggestion) {
-  return suggestion.label;
+  return suggestion.title;
 }
 
 function renderSuggestion(
   suggestion: Suggestion,
   { query, isHighlighted }: SuggestionOptions
 ) {
-  const matches = match(suggestion.label, query);
-  const parts: Parts = parse(suggestion.label, matches);
+  const matches = match(suggestion.title, query);
+  const parts: Parts = parse(suggestion.title, matches);
 
   return (
     <MenuItem selected={isHighlighted} component="div">
@@ -84,18 +84,24 @@ const styles = (theme: Theme) =>
       flexGrow: 2,
       position: "relative",
       height: "fit-content",
-      padding: "10px",
-      background: "#fff"
+      padding: "15px"
     },
     suggestionsContainerOpen: {
       position: "absolute",
-      zIndex: 1,
+      zIndex: 10,
       marginTop: theme.spacing.unit,
       left: 0,
       right: 0
     },
     suggestion: {
       display: "block"
+    },
+    input: {
+      color: "#fff",
+      fontSize: "x-large"
+    },
+    root: {
+      color: "#fff"
     },
     suggestionsList: {
       margin: 0,
@@ -122,7 +128,7 @@ const SearchInputView = (props: AutosuggestProps) => {
       renderSuggestion={renderSuggestion}
       inputProps={{
         classes: props.classes,
-        placeholder: "Search a country (start with a)",
+        placeholder: "Search a video :)",
         value: props.value,
         onChange: props.handleChange
       }}

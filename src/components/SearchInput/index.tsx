@@ -1,74 +1,61 @@
 import * as React from "react";
 import View from "./View";
-export type Suggestion = { label: string };
+import { connect } from "react-redux";
+import { Actions } from "../../services/actions/suggestions";
+import { Suggestion } from "../../services/gapi/responseTypings";
+export type Suggestion = Suggestion;
 
-const suggestions = [
-  { label: "Afghanistan" },
-  { label: "Aland Islands" },
-  { label: "Albania" }
-];
-
-function getSuggestions(value: string) {
-  const inputValue = value.trim().toLowerCase();
-  const inputLength = inputValue.length;
-  let count = 0;
-
-  return inputLength === 0
-    ? []
-    : suggestions.filter(suggestion => {
-        const keep =
-          count < 5 &&
-          suggestion.label.toLowerCase().slice(0, inputLength) === inputValue;
-
-        if (keep) {
-          count += 1;
-        }
-
-        return keep;
-      });
-}
-
-type AutosuggestState = {
-  value: string;
+type AutosuggestProps = {
+  getSuggestions: (value: string) => void;
   suggestions: Suggestion[];
+  currentValue: string;
+  changeSuggestionValue: (value: string) => void;
 };
 
-class SearchInput extends React.Component<{}, AutosuggestState> {
-  public state = {
-    value: "",
-    suggestions: []
+const SearchInput = (props: AutosuggestProps) => {
+  const handleSuggestionsFetchRequested = () => {
+    props.getSuggestions(props.currentValue);
   };
 
-  public handleSuggestionsFetchRequested = ({ value }: { value: string }) => {
-    this.setState({
-      suggestions: getSuggestions(value)
-    });
+  const handleSuggestionsClearRequested = () => {
+    //
   };
 
-  public handleSuggestionsClearRequested = () => {
-    this.setState({
-      suggestions: []
-    });
+  const handleChange = (_: any, { newValue }: { newValue: string }) => {
+    props.changeSuggestionValue(newValue);
   };
 
-  public handleChange = (_: any, { newValue }: { newValue: string }) => {
-    this.setState({
-      value: newValue
-    });
-  };
+  const { suggestions, currentValue } = props;
 
-  public render() {
-    const { value, suggestions } = this.state;
-    return (
-      <View
-        value={value}
-        suggestions={suggestions}
-        handleChange={this.handleChange}
-        handleSuggestionsClearRequested={this.handleSuggestionsClearRequested}
-        handleSuggestionsFetchRequested={this.handleSuggestionsFetchRequested}
-      />
-    );
-  }
-}
+  return (
+    <View
+      value={currentValue}
+      suggestions={suggestions}
+      handleChange={handleChange}
+      handleSuggestionsClearRequested={handleSuggestionsClearRequested}
+      handleSuggestionsFetchRequested={handleSuggestionsFetchRequested}
+    />
+  );
+};
 
-export default SearchInput;
+type StateToProps = {
+  suggestions: { suggestions: object[]; currentValue: string };
+};
+
+const mapStateToProps = (state: StateToProps) => {
+  const { suggestions, currentValue } = state.suggestions;
+  return { suggestions, currentValue };
+};
+
+const mapDispatchToProps = (dispatch: any) => ({
+  getSuggestions: (q: string) => dispatch(Actions.getSuggestions({ q })),
+  changeSuggestionValue: (q: string) =>
+    dispatch(Actions.changeSuggestionValue(q))
+});
+
+const ConnectedInput = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(SearchInput);
+
+export default ConnectedInput;
