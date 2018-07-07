@@ -1,56 +1,76 @@
 // @flow
 import * as React from "react";
-
 import Drawer from "@material-ui/core/Drawer";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import { connect } from "react-redux";
-import { withStyles } from "@material-ui/core/styles";
+import { withStyles, Theme } from "@material-ui/core/styles";
 import { WithStyles, createStyles } from "@material-ui/core";
-import InboxIcon from "@material-ui/icons/Inbox";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
+import { AdjustedItem } from "../../services/gapi/responseTypings";
 
-const styles = () =>
+const styles = (theme: Theme) =>
   createStyles({
     drawerPaper: {
-      top: "64px",
-      width: "255px"
+      width: "32%",
+      zIndex: 11,
+      top: "100px",
+      paddingBottom: "72px",
+      height: "100%",
+      [theme.breakpoints.down("md")]: {
+        width: "100%"
+      }
+    },
+    drawerPaperClosed: {
+      width: 0
+    },
+    paddingList: {
+      paddingBottom: "108px"
     }
   });
 
-type Props = { open: boolean } & WithStyles;
+type Props = { open: boolean; videos: AdjustedItem[] } & WithStyles;
 
 const LayoutMenu = (props: Props) => {
-  const { open, classes } = props;
+  const { open, classes, videos } = props;
+  const OPEN = open && videos.length > 0;
   return (
     <Drawer
-      classes={{ paper: classes.drawerPaper }}
-      open={open}
+      classes={{
+        paper: OPEN ? classes.drawerPaper : classes.drawerPaperClosed
+      }}
+      open={OPEN}
       anchor="left"
-      variant="permanent"
+      variant="persistent"
     >
-      <List>
-        <ListItem button={true}>
-          <ListItemIcon>
-            <InboxIcon />
-          </ListItemIcon>
-          <ListItemText primary="Inbox" />
-        </ListItem>
+      <List classes={{ padding: classes.paddingList }}>
+        {videos.map(video => (
+          <ListItem button={true} id={video.id}>
+            <ListItemIcon>
+              <img src={video.thumbnail} alt="video-item" />
+            </ListItemIcon>{" "}
+            <ListItemText primary={<h4> {video.title} </h4>} />
+          </ListItem>
+        ))}
       </List>
     </Drawer>
   );
 };
 
-type ReduxState = {
+type StateToProps = {
   menu: {
     open: boolean;
   };
+  videos: {
+    videos: AdjustedItem[];
+  };
 };
 
-const mapStateToProps = ({ menu }: ReduxState) => {
+const mapStateToProps = (state: StateToProps) => {
   return {
-    open: menu.open
+    open: state.menu.open,
+    videos: state.videos.videos
   };
 };
 
