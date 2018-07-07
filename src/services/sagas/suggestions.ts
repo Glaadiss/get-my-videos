@@ -11,12 +11,12 @@ export function* getSuggestions({
   payload: VideoQuery;
   type: string;
 }) {
-  delay(500); // debounce request
+  yield delay(300); // debounce request
   try {
     const videos = yield call(getVideosAction, { q, maxResults });
-    put(Actions.getSuggestionsFetched(transformResponse(videos)));
+    yield put(Actions.getSuggestionsFetched(transformResponse(videos)));
   } catch (error) {
-    put(Actions.getSuggestionsError());
+    yield put(Actions.getSuggestionsError());
   }
 }
 
