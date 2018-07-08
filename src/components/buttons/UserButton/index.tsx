@@ -7,9 +7,20 @@ const StyledButton = styled(Button)`
   float: right;
 `;
 
-const UserButton = () => {
+type P = {
+  openMenu: (event: any) => void;
+  anchorEl?: string;
+};
+
+const UserButton = (props: P) => {
   return (
-    <StyledButton variant="fab" color="secondary">
+    <StyledButton
+      aria-owns={props.anchorEl && "simple-menu"}
+      aria-haspopup="true"
+      variant="fab"
+      color="secondary"
+      onClick={props.openMenu}
+    >
       <Account />
     </StyledButton>
   );

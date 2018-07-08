@@ -9,9 +9,18 @@ import Typography from "@material-ui/core/Typography";
 
 const styles = (theme: Theme) =>
   createStyles({
+    button: {
+      [theme.breakpoints.down("xs")]: {
+        width: "inherit"
+      }
+    },
     icon: {
       height: 45,
-      width: 45
+      width: 45,
+      [theme.breakpoints.down("xs")]: {
+        height: 45,
+        width: 20
+      }
     },
     showOnBig: {
       color: theme.palette.secondary.light,
@@ -28,15 +37,20 @@ type P = WithStyles & {
 };
 
 const MenuButton = (props: P) => {
-  const { open, closeDrawer, openDrawer } = props;
+  const { open, closeDrawer, openDrawer, classes } = props;
   const onClick = () => (open ? closeDrawer() : openDrawer());
   return (
     <>
       <Typography variant="title" color="inherit">
-        <IconButton color="inherit" aria-label="Menu" onClick={onClick}>
-          <MenuIcon className={props.classes.icon} />
+        <IconButton
+          color="inherit"
+          className={classes.button}
+          aria-label="Menu"
+          onClick={onClick}
+        >
+          <MenuIcon className={classes.icon} />
         </IconButton>{" "}
-        <span className={props.classes.showOnBig}>Get Your Videos!</span>
+        <span className={classes.showOnBig}>Get Your Videos!</span>
       </Typography>
     </>
   );
