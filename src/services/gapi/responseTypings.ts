@@ -70,3 +70,52 @@ export interface Suggestion {
   id: string;
   title: string;
 }
+
+export type RatingEnum = "like" | "dislike" | "none";
+
+export interface RateQuery {
+  id: string;
+  rating: RatingEnum;
+}
+
+export interface RatingItem {
+  videoId: string;
+  rating: string;
+}
+
+export interface RatingObject {
+  kind: string;
+  etag: string;
+  items: RatingItem[];
+}
+
+export interface Statistics {
+  viewCount: string;
+  likeCount: string;
+  dislikeCount: string;
+  favoriteCount: string;
+  commentCount: string;
+}
+
+export interface DetailItem {
+  kind: string;
+  etag: string;
+  id: Id;
+  snippet: Snippet;
+  statistics: Statistics;
+}
+
+export interface AdjustemDetailItem {
+  id: string;
+  publishedAt: Date;
+  description: string;
+  thumbnail: string;
+  title: string;
+  statistics: Statistics;
+}
+
+export interface DetailObject {
+  kind: string;
+  etag: string;
+  items: DetailItem[];
+}
