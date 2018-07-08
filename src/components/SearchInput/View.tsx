@@ -6,10 +6,9 @@ import TextField from "@material-ui/core/TextField";
 import Paper from "@material-ui/core/Paper";
 import MenuItem from "@material-ui/core/MenuItem";
 import { withStyles } from "@material-ui/core/styles";
-import { Theme } from "@material-ui/core/styles/createMuiTheme";
-import { WithStyles, createStyles } from "@material-ui/core";
+import { WithStyles } from "@material-ui/core";
 import { Suggestion } from "./index";
-
+import { styles } from "./styles";
 type SuggestionOptions = { query: string; isHighlighted: boolean };
 
 type Parts = Array<{ text: string; highlight: boolean }>;
@@ -77,38 +76,6 @@ function renderInput(inputProps: any) {
     />
   );
 }
-
-const styles = (theme: Theme) =>
-  createStyles({
-    container: {
-      flexGrow: 2,
-      position: "relative",
-      height: "fit-content",
-      padding: "15px"
-    },
-    suggestionsContainerOpen: {
-      position: "absolute",
-      zIndex: 10,
-      marginTop: theme.spacing.unit,
-      left: 0,
-      right: 0
-    },
-    suggestion: {
-      display: "block"
-    },
-    input: {
-      color: "#fff",
-      fontSize: "x-large"
-    },
-    root: {
-      color: "#fff"
-    },
-    suggestionsList: {
-      margin: 0,
-      padding: 0,
-      listStyleType: "none"
-    }
-  });
 
 const SearchInputView = (props: AutosuggestProps) => {
   return (

@@ -4,33 +4,20 @@ import Drawer from "@material-ui/core/Drawer";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import { connect } from "react-redux";
-import { withStyles, Theme } from "@material-ui/core/styles";
-import { WithStyles, createStyles } from "@material-ui/core";
+import { withStyles } from "@material-ui/core/styles";
+import { WithStyles } from "@material-ui/core";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
 import { AdjustedItem } from "../../services/gapi/responseTypings";
+import { RootState } from "../../services/reducers/Types";
+import { Actions } from "../../services/actions/currentVideo";
+import { styles } from "./styles";
 
-const styles = (theme: Theme) =>
-  createStyles({
-    drawerPaper: {
-      width: "32%",
-      zIndex: 11,
-      top: "100px",
-      paddingBottom: "72px",
-      height: "100%",
-      [theme.breakpoints.down("md")]: {
-        width: "100%"
-      }
-    },
-    drawerPaperClosed: {
-      width: 0
-    },
-    paddingList: {
-      paddingBottom: "108px"
-    }
-  });
-
-type Props = { open: boolean; videos: AdjustedItem[] } & WithStyles;
+type Props = WithStyles & {
+  open: boolean;
+  videos: AdjustedItem[];
+  selectVideo: (id: string, closeTab: boolean) => void;
+} & WithStyles;
 
 const LayoutMenu = (props: Props) => {
   const { open, classes, videos } = props;
@@ -45,8 +32,13 @@ const LayoutMenu = (props: Props) => {
       variant="persistent"
     >
       <List classes={{ padding: classes.paddingList }}>
+        {console.log(videos)}
         {videos.map(video => (
-          <ListItem button={true} id={video.id}>
+          <ListItem
+            button={true}
+            key={video.id}
+            onClick={props.selectVideo.bind(null, video.id)}
+          >
             <ListItemIcon>
               <img src={video.thumbnail} alt="video-item" />
             </ListItemIcon>{" "}
@@ -58,21 +50,24 @@ const LayoutMenu = (props: Props) => {
   );
 };
 
-type StateToProps = {
-  menu: {
-    open: boolean;
-  };
-  videos: {
-    videos: AdjustedItem[];
-  };
-};
-
-const mapStateToProps = (state: StateToProps) => {
+const mapStateToProps = (state: RootState) => {
   return {
     open: state.menu.open,
     videos: state.videos.videos
   };
 };
 
+const mapDispatchToProps = (dispatch: any) => {
+  return {
+    selectVideo: (id: string, closeTab: boolean) => {
+      dispatch(Actions.getDetails({ id }));
+      dispatch(Actions.getOwnerLikes({ id }));
+    }
+  };
+};
+
 const StyledLayoutMenu = withStyles(styles)(LayoutMenu);
-export default connect(mapStateToProps)(StyledLayoutMenu);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(StyledLayoutMenu);
