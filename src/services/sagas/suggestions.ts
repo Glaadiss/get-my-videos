@@ -11,7 +11,7 @@ export function* getSuggestions({
   payload: VideoQuery;
   type: string;
 }) {
-  yield delay(300); // debounce request
+  yield delay(100); // debounce request
   try {
     const videos = yield call(getVideosAction, { q, maxResults });
     yield put(Actions.getSuggestionsFetched(transformResponse(videos)));

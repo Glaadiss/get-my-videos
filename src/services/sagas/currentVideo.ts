@@ -1,5 +1,6 @@
 import { call, put } from "redux-saga/effects";
 import { Actions } from "../actions/currentVideo";
+import { Actions as VideoActions } from "../actions/videos";
 import {
   getDetails as getDetailsAction,
   getRating,
@@ -20,7 +21,9 @@ export function* getDetails({
 }) {
   try {
     const details = yield call(getDetailsAction, { id });
-    yield put(Actions.getDetailsFetched(transformResponse(details)[0]));
+    const response = transformResponse(details)[0];
+    yield put(Actions.getDetailsFetched(response));
+    yield put(VideoActions.getVideos({ q: response.title }));
   } catch (error) {
     yield put(Actions.getDetailsError());
   }
@@ -33,7 +36,7 @@ function transformResponse(response: DetailObject): AdjustemDetailItem[] {
 function getInfoFromItem(detailItem: DetailItem): AdjustemDetailItem {
   const { snippet, id, statistics } = detailItem;
   return {
-    id: id.videoId,
+    id: id.videoId || (id as any),
     title: snippet.title,
     description: snippet.description,
     publishedAt: snippet.publishedAt,
@@ -59,7 +62,7 @@ export function* getOwnerLikes({
 export function* rate({ payload }: { payload: RateQuery; type: string }) {
   try {
     const rate = yield call(rateAction, payload);
-    yield put(Actions.rateConfirm(rate));
+    yield put(Actions.rateConfirm(rate.rating));
   } catch (error) {
     yield put(Actions.rateError());
   }
