@@ -10,25 +10,32 @@ const CLIENT_ID =
   "650362998502-hgepbavbsu927vv11gnm0pt7ohfjpr1g.apps.googleusercontent.com";
 
 function loadYoutubeApi(): any {
+  const reason = "Can't fetch google library!";
   return new Promise((resolve, reject) => {
     const { gapi } = window as any;
-    const cantLoad = () => gapi === undefined || gapi.client === undefined;
-    if (cantLoad()) {
-      reject("Can't fetch google library!");
+    if (!gapi) {
+      reject(reason);
     }
-
-    gapi.client
-      .init({
-        apiKey: API_KEY,
-        clientId: CLIENT_ID,
-        scope: "https://www.googleapis.com/auth/youtube.force-ssl",
-        discoveryDocs: [
-          "https://www.googleapis.com/discovery/v1/apis/youtube/v3/rest"
-        ]
-      })
-      .then(() => {
-        resolve();
-      });
+    gapi.load(
+      "client:auth2",
+      () => {
+        gapi.client
+          .init({
+            apiKey: API_KEY,
+            clientId: CLIENT_ID,
+            scope: "https://www.googleapis.com/auth/youtube.force-ssl",
+            discoveryDocs: [
+              "https://www.googleapis.com/discovery/v1/apis/youtube/v3/rest"
+            ]
+          })
+          .then(() => {
+            resolve();
+          });
+      },
+      () => {
+        reject(reason);
+      }
+    );
   });
 }
 
@@ -51,9 +58,23 @@ function getVideos({ q, maxResults = 15 }: VideoQuery) {
   });
 }
 
+function getPopularVideos() {
+  return new Promise((resolve, reject) => {
+    const request = requestObj().youtube.videos.list({
+      chart: "mostPopular",
+      part: "snippet,statistics",
+      maxResults: 15
+    });
+    request.execute((response: DetailObject) => {
+      const items = response && response.items;
+      items ? resolve(response) : reject("Can't fetch details from gapi");
+    });
+  });
+}
+
 function getDetails({ id }: { id: string }) {
   return new Promise((resolve, reject) => {
-    const request = requestObj().youtube.list({
+    const request = requestObj().youtube.videos.list({
       id,
       part: "snippet,statistics"
     });
@@ -82,8 +103,7 @@ function rate({ id, rating }: RateQuery) {
 function getRating({ id }: { id: string }) {
   return new Promise((resolve, reject) => {
     const request = requestObj().youtube.videos.getRating({
-      id,
-      onBehalfOfContentOwner: ""
+      id
     });
     request.execute((response: RatingObject) => {
       const items = response && response.items;
@@ -101,7 +121,10 @@ function signOut() {
 }
 
 function signInListen(cb: (data: any) => void) {
-  getAuthInstance().isSignedIn.listen((data: any) => cb(data));
+  cb(getAuthInstance().isSignedIn.Ab);
+  getAuthInstance().isSignedIn.listen((data: any) =>
+    cb(getAuthInstance().isSignedIn.Ab)
+  );
 }
 
 function requestObj() {
@@ -123,5 +146,6 @@ export {
   signInListen,
   getRating,
   rate,
-  getDetails
+  getDetails,
+  getPopularVideos
 };
