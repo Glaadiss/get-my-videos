@@ -57,13 +57,13 @@ const RateTab = (props: P) => {
           </Typography>
         </LContainer>
         <RContainer>
-          <Button {...buttonCommon("dislike")}>
-            {changeToK(statistics.dislikeCount)}
-            <ThumbDown className={classes.rightIcon} />
-          </Button>
           <Button {...buttonCommon("like")}>
             {changeToK(statistics.likeCount)}
             <ThumbUp className={classes.rightIcon} />
+          </Button>
+          <Button {...buttonCommon("dislike")}>
+            {changeToK(statistics.dislikeCount)}
+            <ThumbDown className={classes.rightIcon} />
           </Button>
           {isLikesLoading && (
             <CircularProgress size={24} className={classes.buttonProgress} />

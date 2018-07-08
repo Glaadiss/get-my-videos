@@ -2,7 +2,8 @@ import {
   Actions,
   GET_VIDEOS_ERROR,
   GET_VIDEOS_FETCHED,
-  GET_VIDEOS_REQUEST
+  GET_VIDEOS_REQUEST,
+  GET_POPULAR_VIDEOS_REQUEST
 } from "../actions/videos";
 import { AdjustedItem } from "../gapi/responseTypings";
 
@@ -32,7 +33,11 @@ export default function videos(state: State = defaultState, action: Actions) {
       };
     case GET_VIDEOS_ERROR:
       return { ...state, isLoading: false, isError: true };
-
+    case GET_POPULAR_VIDEOS_REQUEST:
+      return {
+        ...state,
+        isLoading: true
+      };
     default:
       return state;
   }

@@ -1,13 +1,22 @@
 import * as React from "react";
 import YouTube from "react-youtube";
 import { connect } from "react-redux";
-// import { debounce } from "lodash";
 import RateTab from "./RateTab";
 import { RootState } from "../../services/reducers/Types";
 import { AdjustemDetailItem } from "../../services/gapi/responseTypings";
+import { Typography } from "@material-ui/core";
+import Progress from "../Progress";
+import styled from "styled-components";
+
+const NoVideo = styled(Typography)`
+  margin: 15% !important;
+  color: white !important;
+`;
 
 type Props = AdjustemDetailItem & {
   open: boolean;
+  typographyReady: boolean;
+  isVideoLoading: boolean;
 };
 
 type State = {
@@ -37,7 +46,22 @@ class Content extends React.Component<Props, State> {
           paddingTop: "70px"
         }}
       >
-        <YouTube videoId={this.props.id} opts={opts} onReady={this._onReady} />
+        {this.props.id ? (
+          this.props.isVideoLoading ? (
+            <Progress />
+          ) : (
+            <YouTube
+              videoId={this.props.id}
+              opts={opts}
+              onReady={this._onReady}
+            />
+          )
+        ) : this.props.typographyReady ? (
+          <NoVideo variant="display1">Find something for yourself :)</NoVideo>
+        ) : (
+          <Progress />
+        )}
+
         <RateTab />
       </div>
     );
@@ -51,7 +75,8 @@ class Content extends React.Component<Props, State> {
 const mapStateToProps = (state: RootState) => {
   return {
     open: state.menu.open && state.videos.videos.length > 0,
-    ...state.currentVideo
+    ...state.currentVideo,
+    typographyReady: state.videos.videos.length > 10
   };
 };
 

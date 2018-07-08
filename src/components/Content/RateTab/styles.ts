@@ -6,12 +6,10 @@ export const styles = (theme: Theme) =>
   createStyles({
     button: {
       margin: theme.spacing.unit,
-      float: "right",
       border: "4px solid white"
     },
     buttonPicked: {
       margin: theme.spacing.unit,
-      float: "right",
       border: "4px solid green"
     },
     rightIcon: {
@@ -46,7 +44,8 @@ export const Container = styled.div`
 `;
 
 export const RContainer = styled.div`
-  float: right;
+  justify-content: flex-end;
+  text-align: right;
   position: relative;
 `;
 export const LContainer = styled.div`
