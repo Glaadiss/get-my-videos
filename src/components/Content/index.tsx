@@ -1,7 +1,7 @@
 import * as React from "react";
 import YouTube from "react-youtube";
 import { connect } from "react-redux";
-import { debounce } from "lodash";
+// import { debounce } from "lodash";
 import RateTab from "./RateTab";
 import { RootState } from "../../services/reducers/Types";
 import { AdjustemDetailItem } from "../../services/gapi/responseTypings";
@@ -20,16 +20,6 @@ class Content extends React.Component<Props, State> {
     height: `${window.innerHeight - 250}`,
     width: `100%`
   };
-
-  private resize = debounce((_: any): void => {
-    this.setState({
-      height: `${window.innerHeight - 250}`
-    });
-  }, 500);
-
-  public componentDidMount() {
-    window.onresize = this.resize;
-  }
 
   public render() {
     const opts = {

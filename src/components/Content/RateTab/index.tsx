@@ -12,8 +12,10 @@ import {
 import { Actions } from "../../../services/actions/currentVideo";
 import { styles, Container, LContainer, RContainer } from "./styles";
 import { Rate, changeToK, changeStatus } from "./auxiliary";
+import CircularProgress from "@material-ui/core/CircularProgress";
 
 export type P = {
+  isLikesLoading: boolean;
   logged: boolean;
   currentUserLike: RatingEnum;
   rate: (payload: Rate) => void;
@@ -21,15 +23,22 @@ export type P = {
   AdjustemDetailItem;
 
 const RateTab = (props: P) => {
-  const { classes, logged, statistics, id, currentUserLike } = props;
+  const {
+    classes,
+    logged,
+    statistics,
+    id,
+    currentUserLike,
+    isLikesLoading
+  } = props;
   const buttonCommon = (type: "like" | "dislike") => ({
     variant: "contained" as any,
-    disabled: !logged,
+    disabled: !logged || isLikesLoading,
     className: currentUserLike === type ? classes.buttonPicked : classes.button,
     onClick: props.rate.bind(null, {
       id,
       currentUserLike,
-      target: "dislike"
+      target: type
     })
   });
 
@@ -56,6 +65,9 @@ const RateTab = (props: P) => {
             {changeToK(statistics.likeCount)}
             <ThumbUp className={classes.rightIcon} />
           </Button>
+          {isLikesLoading && (
+            <CircularProgress size={24} className={classes.buttonProgress} />
+          )}
         </RContainer>
       </Container>
       <Container>
