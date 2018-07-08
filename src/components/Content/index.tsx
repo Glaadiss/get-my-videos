@@ -2,7 +2,11 @@ import * as React from "react";
 import YouTube from "react-youtube";
 import { connect } from "react-redux";
 import { debounce } from "lodash";
-type Props = {
+import RateTab from "./RateTab";
+import { RootState } from "../../services/reducers/Types";
+import { AdjustemDetailItem } from "../../services/gapi/responseTypings";
+
+type Props = AdjustemDetailItem & {
   open: boolean;
 };
 
@@ -13,13 +17,13 @@ type State = {
 
 class Content extends React.Component<Props, State> {
   public state = {
-    height: `${window.innerHeight - 150}`,
+    height: `${window.innerHeight - 250}`,
     width: `100%`
   };
 
   private resize = debounce((_: any): void => {
     this.setState({
-      height: `${window.innerHeight - 150}`
+      height: `${window.innerHeight - 250}`
     });
   }, 500);
 
@@ -32,34 +36,33 @@ class Content extends React.Component<Props, State> {
       height: this.state.height,
       width: this.state.width,
       playerVars: {
-        autoplay: 0
+        autoplay: 1
       }
     };
 
     return (
       <div
         style={{
-          paddingLeft: this.props.open ? "32%" : "0",
-          paddingTop: "100px"
+          paddingLeft: this.props.open ? "32.5%" : "0",
+          paddingTop: "70px"
         }}
       >
-        <YouTube videoId="2g811Eo7K8U" opts={opts} onReady={this._onReady} />
+        <YouTube videoId={this.props.id} opts={opts} onReady={this._onReady} />
+        <RateTab />
       </div>
     );
   }
 
   private _onReady(event: any) {
-    // access to player in all event handlers via event.target
     event.target.pauseVideo();
   }
 }
 
-type StateToProps = {
-  menu: { open: boolean };
-  videos: { videos: any[] };
-};
-const mapStateToProps = (state: StateToProps) => {
-  return { open: state.menu.open && state.videos.videos.length > 0 };
+const mapStateToProps = (state: RootState) => {
+  return {
+    open: state.menu.open && state.videos.videos.length > 0,
+    ...state.currentVideo
+  };
 };
 
 const ConnectedContent = connect(
